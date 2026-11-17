@@ -1,0 +1,88 @@
+/* Hallmark · shape: акростих ДУМА · genre: modern-minimal · theme: custom · job: buy · idea: "Буквы ДУМА из подписи логотипа — каталог и подпись бренда; над деталью думает менеджер, которому пишут VIN" · vibe: "фирменный красный, тяжёлый курсив, прямой запрос менеджеру"
+ * paper: #FFFFFF · accent: #D82525 · display: Pliant · body: Libre Franklin · hero: H1 и карточка запроса VIN с превью сообщения + вертикальный столбик красных букв ДУМА-указатель · nav: строка якорей + телефон и мессенджеры, компактная шапка с полем после первого экрана · footer: светлый, красная линия, 4 колонки разной ширины · imagery: none · signature: акростих ДУМА — столбик в первом экране, лестница в каталоге
+ * axes: light/grotesk-heavy/chromatic-red · posture: committed · surface: absolute · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S5 R4 V4 · weakest: dostavka, полосы строго разной смысловой ширины (самовивіз, Київ, Україна), разный текст, без иконок */
+/* Hallmark · waive 38ii · --font-display Pliant italic on every h1/h2, true italic files, font-synthesis: none · курсив повторяет наклон надписи «АВТОДУМА» в логотипе клиента (concept.md п. 5, приоритет 2) */
+/* Hallmark · waive 38iii · H2 каталога: красные первые буквы Д, У, М, А · это фирменная подпись логотипа клиента (C-036), signature концепции, один раз на странице */
+/* Hallmark · waive 39b · поле VIN 64 px (на телефоне 56), кнопки 52 px (на телефоне 56) · размеры заданы утверждённой концепцией (concept.md п. 5, первый экран), зоны касания для работы у машины */
+/* Hallmark · waive 69 · телефон 044 585-45-35 в шапке, hero, блоке biznes и контактах · в hero, шапке и контактах телефон стоит рядом с Viber и Telegram: это канал целевого действия там, где посетитель решает написать */
+/* Hallmark · dismissed F19 · Pliant display 700/800/900 and Libre Franklin body 400/500/600 are the six files the concept names; each weight has one role (heads, letters, labels, text) */
+/* Hallmark · dismissed 25 · .about__text is a caption under a year (two to five words), not running prose */
+/* Hallmark · dismissed F4 · .btn--light only on the dark biznes field and .btn--white only on the red kontakty field: one filled primary per surface */
+/* Hallmark · waive 7b · stamp: genre modern-minimal, surface: absolute, контраст 40/41 проходит · белая paper #FFFFFF задана концепцией клиента (veon-concept colors), красный accent и буквы ДУМА держатся на чистом белом */
+/* Client design tokens — only from design/concept.md (veon-concept: colors, fonts). */
+:root {
+  /* Colour roles (concept.md, «Палитра (итог)») */
+  --color-bg: #FFFFFF;
+  --color-surface: #EDECEE;
+  --color-text: #1E1D1F;
+  --color-text-2: #5C5A5E;
+  --color-graphite: #414042;
+  --color-brand: #D82525;
+  --color-accent: #C21F1F;
+  --color-accent-hover: #A51A1A;
+  --color-accent-ink: #FFFFFF;
+  --color-dark: #2A292B;
+  --color-on-dark: #F2F1EF;
+  --color-on-dark-2: #B5B3B7;
+  --color-accent-on-dark: #FF6B5E;
+  --color-border: #7A787C;
+  --color-on-brand: #FFFFFF;
+  --color-shade: rgb(30 29 31 / 0.12);
+
+  /* Type */
+  --font-display: "Pliant", "Arial Black", sans-serif;
+  --font-body: "Libre Franklin", "Segoe UI", Arial, sans-serif;
+  --text-letter-xl: clamp(4.5rem, 1.5rem + 12.2vw, 12.5rem);   /* 72 → 200: буквы каталога */
+  --text-letter-hero: clamp(4.5rem, 2.6rem + 6vw, 8.25rem);    /* 72 → 132: буквы первого экрана */
+  --text-h1: clamp(2.375rem, 1.6rem + 3.2vw, 4.5rem);          /* 38 → 72 */
+  --text-statement: clamp(1.875rem, 1.2rem + 2.9vw, 3.5rem);   /* 30 → 56 */
+  --text-h2: clamp(1.875rem, 1.45rem + 1.75vw, 3rem);          /* 30 → 48 */
+  --text-year: clamp(2.5rem, 1.94rem + 2.3vw, 4rem);           /* 40 → 64 */
+  --text-word: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);          /* 24 → 40 */
+  --text-h3: clamp(1.375rem, 1.14rem + 0.95vw, 2rem);          /* 22 → 32 */
+  --text-lead: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);    /* 18 → 21 */
+  --text-body: clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);        /* 16 → 17 */
+  --text-small: 0.875rem;                                       /* 14 */
+  --lh-display: 1.04;
+  --kern-pair: -0.08em;   /* Pliant: к/ж/х before у (src/middleware.ts) */
+  --lh-text: 1.6;
+
+  /* Space (ритм 4/8) */
+  --space-1: 0.25rem;   /* 4 */
+  --space-2: 0.5rem;    /* 8 */
+  --space-3: 0.75rem;   /* 12 */
+  --space-4: 1rem;      /* 16 */
+  --space-5: 1.5rem;    /* 24 */
+  --space-6: 2rem;      /* 32 */
+  --space-7: 3rem;      /* 48 */
+  --space-8: 4rem;      /* 64 */
+  --space-9: 6rem;      /* 96 */
+  --space-10: 9rem;     /* 144 */
+  --section-y: clamp(var(--space-8), 2rem + 6vw, var(--space-9));       /* 64 → 96 */
+  --section-y-wide: clamp(4.5rem, 2rem + 8.5vw, var(--space-10));       /* 72 → 144 */
+  --gutter: clamp(1.25rem, 0.5rem + 3.3vw, 3.5rem);                     /* 20 → 56 */
+  --grid-gap: var(--space-5);
+
+  /* Layout */
+  --space: var(--gutter);
+  --container: 82.5rem;  /* 1320 */
+  --radius: 4px;
+  --header-h: 4rem;
+  --bar-h: 4rem;
+  --control-h: 3.25rem;  /* 52 */
+  --field-h: 4rem;       /* 64 */
+  --border-w: 2px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 600ms;
+  --dur-fast: 160ms;
+  --dur-ui: 240ms;
+  --z-header: 50;
+  --z-bar: 40;
+  --z-menu: 60;
+}
+@media (min-width: 64rem) {
+  :root { --header-h: 4.5rem; }
+}

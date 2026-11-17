@@ -1,0 +1,53 @@
+---
+// #kontakty — the red field that closes the page: address, hours, every real channel, the route.
+import Icon from "./Icon.astro";
+import { address, schedule, phones, viber, telegram, email, routeHref } from "../data/site";
+---
+<section id="kontakty" class="contacts" aria-labelledby="kontakty-title">
+  <div class="container contacts__grid">
+    <div class="contacts__place">
+      <h2 id="kontakty-title" class="contacts__title"><span class="visually-hidden">Контакти: </span>{address.street}</h2>
+      <p class="contacts__city">{address.city}. Самовивіз і офіс.</p>
+      <p class="contacts__hours">{schedule.days}, {schedule.weekend}</p>
+      <a class="btn btn--white" href={routeHref} target="_blank" rel="noopener"><Icon name="route" /><span>Прокласти маршрут</span></a>
+    </div>
+
+    <div class="contacts__channels">
+      <ul class="contacts__phones num">
+        {phones.map((p, i) => <li class:list={{ "is-main": i === 0 }}><a href={p.href}>{p.label}</a></li>)}
+      </ul>
+      <ul class="contacts__msg">
+        <li><a href={viber.href}><Icon name="viber" /><span>Viber <span class="num">{viber.number}</span></span></a></li>
+        <li><a href={telegram.href} target="_blank" rel="noopener"><Icon name="telegram" /><span>Telegram {telegram.handle}</span></a></li>
+        <li><a href={`mailto:${email}`}><Icon name="mail" /><span>{email}</span></a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contacts {
+    --focus-color: var(--color-on-brand);
+    background: var(--color-brand); color: var(--color-on-brand);
+    padding-block: var(--section-y);
+  }
+  .contacts__grid { display: grid; gap: var(--space-7); }
+  .contacts__place { display: grid; gap: var(--space-3); align-content: start; justify-items: start; }
+  .contacts__title { font-size: var(--text-statement); line-height: 1.04; max-width: 12ch; }
+  .contacts__city { font-size: var(--text-lead); margin-top: var(--space-2); }
+  .contacts__hours { font-size: var(--text-lead); font-weight: 600; margin-bottom: var(--space-4); }
+  .contacts__channels { display: grid; gap: var(--space-6); align-content: start; }
+  .contacts__phones { display: grid; gap: var(--space-1); }
+  .contacts__phones a { display: inline-flex; min-height: 2.75rem; align-items: center; font-size: var(--text-lead); font-weight: 600; white-space: nowrap; text-decoration: none; }
+  .contacts__phones a:hover { text-decoration: underline; }
+  .contacts__phones .is-main a { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h3); }
+  .contacts__msg { display: grid; gap: var(--space-2); padding-top: var(--space-5); border-top: 1px solid var(--color-on-brand); }
+  .contacts__msg a { display: inline-flex; align-items: center; gap: var(--space-3); min-height: 2.75rem; font-weight: 500; overflow-wrap: anywhere; }
+  .contacts__msg :global(svg) { width: 1.5rem; height: 1.5rem; flex: none; }
+
+  @media (min-width: 64rem) {
+    .contacts__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); }
+    .contacts__place { grid-column: 1 / span 7; }
+    .contacts__channels { grid-column: 9 / -1; }
+  }
+</style>

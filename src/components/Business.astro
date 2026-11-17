@@ -1,0 +1,53 @@
+---
+// #biznes — the only dark field on the page: B2B terms (C-030), how to start, dropshipping (C-010). R-007.
+import Icon from "./Icon.astro";
+import FutureLink from "./FutureLink.astro";
+import { phones, mainPhoneShort, b2bMailto, email } from "../data/site";
+---
+<section id="biznes" class="biz" data-rec="R-007" aria-labelledby="biznes-title">
+  <div class="container biz__grid">
+    <h2 id="biznes-title" class="biz__title">Для СТО, автомагазинів і АТП — найнижча ціна, відстрочка платежу за договором поставки й облік замовлень онлайн</h2>
+
+    <div class="biz__col">
+      <h3>Як почати</h3>
+      <p>Зателефонуйте менеджеру або напишіть на <a href={b2bMailto}>{email}</a>.</p>
+      <div class="biz__actions">
+        <a class="btn btn--light num" href={phones[0].href}><Icon name="phone" /><span>Подзвонити<span class="biz__num"> {mainPhoneShort}</span></span></a>
+        <a class="btn btn--ghost-light" href={b2bMailto}><Icon name="mail" /><span>Написати на e-mail</span></a>
+      </div>
+    </div>
+
+    <div class="biz__col biz__col--drop">
+      <h3>Працюємо з дропшиперами</h3>
+      <p>Автодума співпрацює з інтернет-магазинами за моделлю дропшипінгу. Умови співпраці — на сторінці <FutureLink class="biz__future">Партнерам</FutureLink>.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .biz {
+    --focus-color: var(--color-accent-on-dark);
+    background: var(--color-dark); color: var(--color-on-dark);
+    padding-block: var(--section-y-wide);
+  }
+  .biz__grid { display: grid; gap: var(--space-7); }
+  .biz__title { font-size: var(--text-statement); line-height: 1.06; max-width: 24ch; }
+  .biz__col { display: grid; gap: var(--space-4); align-content: start; }
+  .biz__col p { color: var(--color-on-dark-2); max-width: 46ch; }
+  .biz__col a:not(.btn) { color: var(--color-on-dark); font-weight: 600; }
+  .biz__col a:not(.btn):hover { color: var(--color-accent-on-dark); }
+  .biz__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+  .biz__col :global(.biz__future) { color: var(--color-on-dark); font-weight: 600; }
+  .biz__col :global(.biz__future .future-link__note) { background: var(--color-on-dark); color: var(--color-dark); }
+
+  @media (min-width: 64rem) {
+    .biz__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space-8) var(--grid-gap); }
+    .biz__title { grid-column: 1 / span 10; }
+    .biz__col { grid-column: 1 / span 6; }
+    .biz__col--drop { grid-column: 8 / span 5; }
+  }
+  @media (max-width: 29.99rem) {
+    .biz__actions { display: grid; }
+    .biz__num { display: none; }
+  }
+</style>

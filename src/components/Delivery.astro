@@ -1,0 +1,72 @@
+---
+// #dostavka — pay on receipt first, then three stripes whose width follows the distance from the warehouse (R-010; C-007, C-008, C-037).
+import { address, schedule } from "../data/site";
+---
+<section id="dostavka" class="delivery" data-rec="R-010" aria-labelledby="dostavka-title">
+  <div class="container delivery__grid">
+    <div class="delivery__pay">
+      <h2 id="dostavka-title">Оплата — коли деталь у вас у руках</h2>
+      <p class="delivery__main">Оплата при отриманні: «Зворотна доставка» Нової пошти.</p>
+      <ul class="delivery__list">
+        <li>Готівкою в офісі або курʼєру</li>
+        <li>На розрахунковий рахунок</li>
+        <li>Онлайн-платіж</li>
+        <li>Термінал самообслуговування</li>
+      </ul>
+    </div>
+
+    <ul class="delivery__stripes" aria-label="Способи доставки">
+      <li class="stripe stripe--near">
+        <h3>Самовивіз</h3>
+        <p>{address.street}, {schedule.days}</p>
+      </li>
+      <li class="stripe stripe--city">
+        <h3>Курʼєр по Києву</h3>
+        <p><span class="num">200 грн</span>, безкоштовно від <span class="num">2000 грн</span></p>
+      </li>
+      <li class="stripe stripe--country">
+        <h3>По Україні</h3>
+        <p>«Нова пошта» або «Делівері», з оплатою при отриманні</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .delivery { background: var(--color-surface); padding-block: var(--section-y); }
+  .delivery__grid { display: grid; gap: var(--space-7); }
+  .delivery__pay { display: grid; gap: var(--space-5); align-content: start; }
+  .delivery__pay h2 { max-width: 14ch; text-wrap: balance; }
+  .delivery__main {
+    font-family: var(--font-display); font-weight: 700; font-size: var(--text-h3); line-height: 1.2;
+    max-width: 22ch;
+  }
+  .delivery__list { display: grid; gap: var(--space-2); }
+  .delivery__list li { padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+
+  .delivery__stripes { display: grid; gap: var(--space-4); align-content: center; }
+  .stripe {
+    display: grid; gap: var(--space-1);
+    padding: var(--space-5);
+    border: var(--border-w) solid var(--color-graphite);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+  }
+  .stripe p { color: var(--color-text-2); }
+  .stripe--near { width: 62%; }
+  .stripe--city { width: 81%; }
+  .stripe--country { width: 100%; }
+
+  @media (max-width: 29.99rem) {
+    .stripe--near { width: 78%; }
+    .stripe--city { width: 89%; }
+  }
+  @media (min-width: 64rem) {
+    .delivery__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); }
+    .delivery__pay { grid-column: 1 / span 5; }
+    .delivery__stripes { grid-column: 6 / -1; gap: var(--space-5); }
+    .stripe { padding: var(--space-6); }
+    .stripe--near { width: 50%; }
+    .stripe--city { width: 75%; }
+  }
+</style>

@@ -1,0 +1,207 @@
+---
+// Sticky header, two states with the same height: full (anchors, phone, messengers, languages)
+// and compact after the first screen (logo, VIN field, Viber, phone). Phone: logo, search, menu.
+import Icon from "./Icon.astro";
+import VinForm from "./VinForm.astro";
+import FutureLink from "./FutureLink.astro";
+import { anchors, phones, mainPhoneShort, viber, telegram, schedule } from "../data/site";
+---
+<header class="header" data-header data-rec="R-003,R-011">
+  <div class="container header__bar">
+    <a class="header__logo" href="#top" aria-label="Автодума, на початок сторінки">
+      <img src="/images/logo-avtoduma.svg" width="140" height="50" alt="Автодума" fetchpriority="high" />
+    </a>
+
+    <div class="header__swap">
+      <nav class="header__nav" aria-label="Розділи сторінки" data-header-full>
+        <ul>
+          {anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+        </ul>
+      </nav>
+      <div class="header__compact" data-header-compact>
+        <VinForm id="vin-mini" variant="mini" />
+      </div>
+    </div>
+
+    <div class="header__contacts">
+      <a class="header__phone num" href={phones[0].href}>{mainPhoneShort}</a>
+      <a class="header__icon header__icon--viber" href={viber.href} aria-label="Написати у Viber">
+        <Icon name="viber" />
+      </a>
+      <a class="header__icon header__icon--tg" href={telegram.href} target="_blank" rel="noopener" aria-label="Написати в Telegram">
+        <Icon name="telegram" />
+      </a>
+      <div class="header__lang" data-header-full>
+        <span class="header__lang-current" aria-current="true" lang="uk">UA</span>
+        <FutureLink class="future-link--end"><span lang="en">EN</span></FutureLink>
+        <FutureLink class="future-link--end"><span lang="ru">RU</span></FutureLink>
+      </div>
+    </div>
+
+    <a class="header__icon header__search" href="#pidbir" aria-label="Пошук деталі за VIN або номером" data-focus-vin>
+      <Icon name="search" />
+    </a>
+
+    <details class="menu" data-menu>
+      <summary class="header__icon menu__toggle" aria-label="Меню">
+        <Icon name="menu" class="menu__open" />
+        <Icon name="close" class="menu__close" />
+      </summary>
+      <div class="menu__panel">
+        <nav aria-label="Розділи сторінки (меню)">
+          <ul class="menu__anchors">
+            {anchors.map((a) => <li><a href={a.href}>{a.label}</a></li>)}
+          </ul>
+        </nav>
+        <ul class="menu__phones num">
+          {phones.map((p) => <li><a href={p.href}>{p.label}</a></li>)}
+        </ul>
+        <div class="menu__msg">
+          <a class="btn btn--primary" href={viber.href}><Icon name="viber" /><span>Viber</span></a>
+          <a class="btn btn--outline" href={telegram.href} target="_blank" rel="noopener"><Icon name="telegram" /><span>Telegram</span></a>
+        </div>
+        <p class="menu__hours">{schedule.days}, {schedule.weekend}</p>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: var(--z-header);
+    height: var(--header-h);
+    background: var(--color-bg);
+    box-shadow: 0 1px 0 var(--color-shade);
+  }
+  .header__bar { height: 100%; display: flex; align-items: center; gap: var(--space-5); }
+  .header__logo { flex: none; display: block; }
+  .header__logo img { width: 7rem; height: auto; }
+  .header__swap { position: relative; flex: 1 1 auto; min-width: 0; height: 100%; display: none; align-items: center; }
+  .header__nav, .header__compact {
+    transition: opacity var(--dur-ui) var(--ease-out), transform var(--dur-ui) var(--ease-out);
+  }
+  .header__nav ul { display: flex; gap: var(--space-5); justify-content: center; }
+  .header__nav a {
+    display: inline-flex; align-items: center; min-height: 2.75rem;
+    font-size: var(--text-body); font-weight: 500; text-decoration: none; white-space: nowrap;
+  }
+  .header__nav a:hover { color: var(--color-accent); text-decoration: underline; text-decoration-thickness: 2px; }
+  .header__compact { position: absolute; inset: 0; display: none; align-items: center; }
+  .header__compact :global(.vin) { width: min(100%, 34rem); margin-inline: auto; }
+
+  .header__contacts { display: none; align-items: center; gap: var(--space-1); margin-left: auto; }
+  .header__phone { margin-right: var(--space-2); font-weight: 600; font-size: var(--text-body); text-decoration: none; white-space: nowrap; }
+  .header__phone:hover { color: var(--color-accent); text-decoration: underline; }
+  .header__icon {
+    display: inline-grid; place-items: center;
+    width: 2.75rem; height: 2.75rem;
+    border-radius: var(--radius);
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .header__icon:hover { background: var(--color-surface); color: var(--color-accent); }
+  .header__icon:active { background: var(--color-border); }
+  .header__icon :global(svg) { width: 1.5rem; height: 1.5rem; }
+  .header__lang { display: flex; align-items: center; gap: var(--space-3); margin-left: var(--space-3); font-size: var(--text-small); font-weight: 600; }
+  .header__lang-current { color: var(--color-accent); }
+  .header__search { margin-left: auto; }
+
+  /* Menu (details works without scripts) */
+  .menu > summary { list-style: none; }
+  .menu > summary::-webkit-details-marker { display: none; }
+  .menu :global(.menu__close) { display: none; }
+  .menu[open] :global(.menu__open) { display: none; }
+  .menu[open] :global(.menu__close) { display: block; }
+  .menu__panel {
+    position: fixed; inset: var(--header-h) 0 0 0; z-index: var(--z-menu);
+    overflow-y: auto;
+    padding: var(--space-6) var(--gutter) var(--space-8);
+    background: var(--color-bg);
+    border-top: 1px solid var(--color-surface);
+    display: grid; align-content: start; gap: var(--space-6);
+  }
+  .menu__anchors a {
+    display: block; padding: var(--space-2) 0;
+    font-family: var(--font-display); font-style: italic; font-weight: 800; font-size: var(--text-h3);
+    font-synthesis: none; white-space: nowrap; text-decoration: none;
+  }
+  .menu__anchors a:hover { color: var(--color-accent); }
+  .menu__phones { display: grid; gap: var(--space-1); }
+  .menu__phones a { white-space: nowrap; display: inline-flex; min-height: 2.75rem; align-items: center; font-weight: 600; font-size: var(--text-lead); }
+  .menu__msg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-2); }
+  .menu__hours { color: var(--color-text-2); font-size: var(--text-small); }
+
+  @media (min-width: 48rem) {
+    .header__logo img { width: 8.75rem; }
+    .header__contacts { display: flex; }
+    .header__search { display: none; }
+    .header__lang { display: none; }
+  }
+  @media (min-width: 74rem) {
+    .header__swap { display: flex; }
+    .menu { display: none; }
+    .header__contacts { margin-left: 0; }
+    .header__lang { display: flex; }
+  }
+
+  /* Compact state after the first screen (set by the script below) */
+  @media (min-width: 74rem) {
+    :global(.header.is-compact) .header__nav { opacity: 0; transform: translateY(8px); pointer-events: none; }
+    :global(.header.is-compact) .header__lang { opacity: 0; pointer-events: none; }
+  }
+  .header__lang { transition: opacity var(--dur-ui) var(--ease-out); }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const hero = document.getElementById("pidbir");
+  const full = document.querySelectorAll<HTMLElement>("[data-header-full]");
+  const compact = document.querySelector<HTMLElement>("[data-header-compact]");
+  const menu = document.querySelector<HTMLDetailsElement>("[data-menu]");
+
+  const setCompact = (on: boolean) => {
+    header?.classList.toggle("is-compact", on);
+    document.documentElement.classList.toggle("past-hero", on);
+    const wide = window.matchMedia("(min-width: 74rem)").matches;
+    full.forEach((el) => { el.inert = on && wide; });
+    if (compact) compact.inert = !(on && wide);
+  };
+  setCompact(false);
+
+  // A passive scroll check (not an observer): anchor jumps skip over the hero without an intersection change
+  if (header && hero) {
+    let state = false;
+    let queued = false;
+    const check = () => {
+      queued = false;
+      const past = hero.getBoundingClientRect().bottom < header.offsetHeight;
+      if (past !== state) { state = past; setCompact(past); }
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue, { passive: true });
+    check();
+  }
+
+  // Menu closes after a jump, on Escape and on a wider screen
+  menu?.addEventListener("click", (e) => {
+    if ((e.target as Element).closest("a")) menu.open = false;
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menu?.open) { menu.open = false; menu.querySelector("summary")?.focus(); }
+  });
+  menu?.addEventListener("toggle", () => {
+    menu.querySelector("summary")?.setAttribute("aria-label", menu.open ? "Закрити меню" : "Меню");
+  });
+
+  // Search icons put the cursor into the main field
+  document.addEventListener("click", (e) => {
+    const link = (e.target as Element).closest("[data-focus-vin]");
+    if (!link) return;
+    e.preventDefault();
+    const field = document.getElementById("vin") as HTMLInputElement | null;
+    document.getElementById("pidbir")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    field?.focus({ preventScroll: true });
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+// Phone-only action bar: Viber, Telegram, call, search. With scripts it slides in after the first screen (R-003, R-011).
+import Icon from "./Icon.astro";
+import { viber, telegram, phones } from "../data/site";
+---
+<nav class="bar" aria-label="Швидкий звʼязок" data-rec="R-003,R-011">
+  <a href={viber.href}><Icon name="viber" /><span>Viber</span></a>
+  <a href={telegram.href} target="_blank" rel="noopener"><Icon name="telegram" /><span>Telegram</span></a>
+  <a href={phones[0].href}><Icon name="phone" /><span>Подзвонити</span></a>
+  <a href="#pidbir" data-focus-vin><Icon name="search" /><span>Пошук</span></a>
+</nav>
+
+<style>
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar);
+    height: var(--bar-h);
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: var(--color-bg);
+    box-shadow: 0 -1px 0 var(--color-shade);
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform var(--dur-ui) var(--ease-out);
+  }
+  :global(.js) .bar { transform: translateY(110%); }
+  :global(.js.past-hero) .bar { transform: none; }
+  .bar a {
+    display: grid; place-items: center; align-content: center; gap: var(--space-1);
+    font-size: var(--text-small); font-weight: 600; text-decoration: none;
+    color: var(--color-text);
+  }
+  .bar a:first-child { color: var(--color-accent); }
+  .bar a:active { background: var(--color-surface); }
+  .bar a:focus-visible { outline-offset: calc(-1 * var(--border-w) * 2); }
+  .bar :global(svg) { width: 1.5rem; height: 1.5rem; }
+  @media (min-width: 48rem) { .bar { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+</style>

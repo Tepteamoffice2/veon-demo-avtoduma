@@ -1,0 +1,33 @@
+---
+// A future page that is not built in the demo yet (menu item, button, card, footer link).
+// Renders an inactive element with a short note instead of a link: never point it to the client's current site.
+// Click, Enter or Space shows the note at once; hover shows it after a pause; keyboard focus shows it at once.
+import { NOTE_FUTURE } from "../data/site";
+interface Props { note?: string; class?: string; }
+const { note = NOTE_FUTURE, class: cls } = Astro.props;
+---
+<span class:list={["future-link", cls]} role="link" aria-disabled="true" tabindex="0" data-future>
+  <slot />
+  <span class="future-link__note" aria-hidden="true">{note}</span>
+  <span class="visually-hidden">({note})</span>
+</span>
+
+<script>
+  let open: HTMLElement | null = null;
+  let timer = 0;
+  const show = (el: HTMLElement) => {
+    open?.classList.remove("is-noted");
+    el.classList.add("is-noted");
+    open = el;
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => { el.classList.remove("is-noted"); if (open === el) open = null; }, 2400);
+  };
+  document.addEventListener("click", (e) => {
+    const el = (e.target as Element | null)?.closest<HTMLElement>("[data-future]");
+    if (el) { e.preventDefault(); show(el); }
+  });
+  document.addEventListener("keydown", (e) => {
+    const el = (e.target as Element | null)?.closest<HTMLElement>("[data-future]");
+    if (el && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); show(el); }
+  });
+</script>

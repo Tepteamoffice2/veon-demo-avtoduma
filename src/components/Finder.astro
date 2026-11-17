@@ -1,0 +1,137 @@
+---
+// #yak-znaity — "what do you have": one switch, one answer, one action (R-004). Without scripts all three answers are shown.
+import Icon from "./Icon.astro";
+import FutureLink from "./FutureLink.astro";
+import { viber, telegram } from "../data/site";
+const tabs = [
+  { id: "vin", label: "VIN-код" },
+  { id: "nomer", label: "Номер деталі" },
+  { id: "marka", label: "Лише марка й модель" },
+];
+---
+<section id="yak-znaity" class="finder" data-rec="R-004" aria-labelledby="yak-znaity-title">
+  <div class="container finder__inner">
+    <h2 id="yak-znaity-title" class="finder__title">Що у вас є — VIN, номер деталі чи лише марка авто?</h2>
+
+    <div class="finder__tabs" role="tablist" aria-label="Що у вас є" data-tabs hidden>
+      {tabs.map((t, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${t.id}`}
+          aria-controls={`panel-${t.id}`}
+          aria-selected={i === 0 ? "true" : "false"}
+          tabindex={i === 0 ? 0 : -1}
+          class="finder__tab"
+        >{t.label}</button>
+      ))}
+    </div>
+
+    <div class="finder__panels">
+      <div class="finder__panel" id="panel-vin" role="tabpanel" aria-labelledby="tab-vin" data-panel>
+        <h3 class="finder__answer">Надішліть VIN — менеджер підбере деталь саме під ваше авто.</h3>
+        <p class="finder__text">VIN — 17 символів у свідоцтві про реєстрацію. Додайте назву деталі, і менеджер відповість у чаті.</p>
+        <div class="finder__actions">
+          <a class="btn btn--primary" href={viber.href}><Icon name="viber" /><span>Надіслати у Viber</span></a>
+          <a class="btn btn--outline" href={telegram.href} target="_blank" rel="noopener"><Icon name="telegram" /><span>Telegram</span></a>
+        </div>
+      </div>
+
+      <div class="finder__panel" id="panel-nomer" role="tabpanel" aria-labelledby="tab-nomer" data-panel>
+        <h3 class="finder__answer">Знаєте номер? Надішліть його у Viber — менеджер перевірить наявність.</h3>
+        <p class="finder__text">Пошук за номером деталі з’явиться в повній версії сайту.</p>
+        <div class="finder__actions">
+          <a class="btn btn--primary" href={viber.href}><Icon name="viber" /><span>Надіслати номер у Viber</span></a>
+          <FutureLink class="btn btn--outline finder__future" note="Розділ у розробці — надішліть номер у Viber"><Icon name="search" /><span>Шукати за номером</span></FutureLink>
+        </div>
+      </div>
+
+      <div class="finder__panel" id="panel-marka" role="tabpanel" aria-labelledby="tab-marka" data-panel>
+        <h3 class="finder__answer">Оберіть групу в каталозі або напишіть марку, модель і рік менеджеру.</h3>
+        <p class="finder__text">Каталог зібраний за літерами ДУМА: деталі, устаткування, механізми, аксесуари.</p>
+        <div class="finder__actions">
+          <a class="btn btn--primary" href="#katalog">Відкрити каталог</a>
+          <a class="btn btn--outline" href={viber.href}><Icon name="viber" /><span>Написати у Viber</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .finder { background: var(--color-surface); padding-block: var(--section-y); }
+  .finder__inner { display: grid; gap: var(--space-6); }
+  .finder__title { max-width: 22ch; }
+  .finder__tabs {
+    display: flex; flex-wrap: wrap; gap: var(--space-1);
+    padding: var(--space-1);
+    background: var(--color-bg);
+    border-radius: var(--radius);
+    width: fit-content; max-width: 100%;
+  }
+  .finder__tabs[hidden] { display: none; }
+  .finder__tab {
+    min-height: var(--control-h);
+    padding: 0 var(--space-5);
+    border: 0; border-radius: var(--radius);
+    background: transparent; color: var(--color-text);
+    font-family: var(--font-body); font-size: var(--text-body); font-weight: 600;
+    white-space: nowrap; cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .finder__tab:hover { background: var(--color-surface); }
+  .finder__tab:active { background: var(--color-border); }
+  .finder__tab[aria-selected="true"] { background: var(--color-text); color: var(--color-bg); }
+  .finder__panels { display: grid; gap: var(--space-8); }
+  .finder__panel { display: grid; gap: var(--space-4); max-width: 52rem; }
+  .finder__panel[hidden] { display: none; }
+  .finder__answer { font-size: var(--text-h3); line-height: 1.2; }
+  .finder__text { max-width: 60ch; color: var(--color-text-2); }
+  .finder__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+  .finder__actions :global(.finder__future) { text-decoration: none; cursor: not-allowed; color: var(--color-text-2); border-color: var(--color-border); border-style: dashed; }
+  .finder__actions :global(.finder__future:hover) { background: transparent; color: var(--color-text); }
+
+  /* Effect 3: the new answer comes in from the side */
+  :global(.js) .finder__panel.is-entering { animation: panel-in var(--dur-ui) var(--ease-out); }
+  @keyframes panel-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 47.99rem) {
+    @keyframes panel-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
+    .finder__tabs { width: 100%; }
+    .finder__tab { flex: 1 1 auto; padding: 0 var(--space-3); }
+    .finder__actions { display: grid; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .finder__panel.is-entering { animation: none; }
+  }
+</style>
+
+<script>
+  const list = document.querySelector<HTMLElement>("[data-tabs]");
+  if (list) {
+    const tabs = [...list.querySelectorAll<HTMLButtonElement>("[role=tab]")];
+    const panels = [...document.querySelectorAll<HTMLElement>("[data-panel]")];
+    list.hidden = false;
+    const select = (i: number, focus = false) => {
+      tabs.forEach((t, j) => {
+        const on = i === j;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        panels[j].hidden = !on;
+        panels[j].classList.toggle("is-entering", on);
+      });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener("click", () => select(i));
+      t.addEventListener("keydown", (e) => {
+        const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (step) { e.preventDefault(); select((i + step + tabs.length) % tabs.length, true); }
+        if (e.key === "Home") { e.preventDefault(); select(0, true); }
+        if (e.key === "End") { e.preventDefault(); select(tabs.length - 1, true); }
+      });
+    });
+    panels.forEach((p) => p.setAttribute("tabindex", "0"));
+    select(0);
+    panels[0].classList.remove("is-entering");
+  }
+</script>

@@ -1,0 +1,89 @@
+---
+// Light footer under a 4 px red rule: future pages, catalog by letters, legal entity and payment, channels and languages.
+import FutureLink from "./FutureLink.astro";
+import { futurePages, catalog, legal, telegram, viber, phones } from "../data/site";
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="#top" class="footer__logo" aria-label="Автодума, на початок сторінки">
+        <img src="/images/logo-avtoduma.svg" width="140" height="50" alt="Автодума" />
+      </a>
+      <p class="footer__caption">
+        <span><b>Д</b>еталі</span> | <span><b>У</b>статкування</span> | <span><b>М</b>еханізми</span> | <span><b>А</b>ксесуари</span>
+      </p>
+    </div>
+
+    <nav class="footer__col footer__col--pages" aria-label="Розділи сайту">
+      <p class="footer__head">Розділи</p>
+      <ul>
+        {futurePages.map((p) => <li><FutureLink class="future-link--up">{p}</FutureLink></li>)}
+      </ul>
+    </nav>
+
+    <nav class="footer__col" aria-label="Каталог за літерами">
+      <p class="footer__head">Каталог</p>
+      <ul>
+        {catalog.map((r) => <li><a href={`#${r.id}`}>{r.word}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <p class="footer__head">Оплата</p>
+      <p>Готівка, на рахунок, онлайн, Google Pay, Apple Pay, Visa, Mastercard</p>
+      <p class="footer__legal num">{legal}</p>
+    </div>
+
+    <div class="footer__col">
+      <p class="footer__head">Звʼязок</p>
+      <ul>
+        <li><a class="num" href={phones[0].href}>{phones[0].label}</a></li>
+        <li><a href={viber.href}>Viber</a></li>
+        <li><a href={telegram.href} target="_blank" rel="noopener">Telegram {telegram.handle}</a></li>
+      </ul>
+      <p class="footer__lang">
+        <span aria-current="true">UA</span>
+        <FutureLink class="future-link--up"><span lang="en">EN</span></FutureLink>
+        <FutureLink class="future-link--up future-link--end"><span lang="ru">RU</span></FutureLink>
+      </p>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <p class="num">© {year} Автодума</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 4px solid var(--color-brand);
+    padding-block: var(--space-8) var(--space-6);
+    font-size: var(--text-small);
+  }
+  .footer__grid { display: grid; gap: var(--space-7) var(--grid-gap); grid-template-columns: minmax(0, 1fr); }
+  .footer__brand { display: grid; gap: var(--space-3); align-content: start; }
+  .footer__logo img { width: 8.75rem; }
+  .footer__caption { color: var(--color-graphite); }
+  .footer__caption b { color: var(--color-brand); font-weight: 600; }
+  .footer__col { display: grid; gap: var(--space-3); align-content: start; }
+  .footer__head { font-family: var(--font-body); font-style: normal; font-size: var(--text-body); font-weight: 600; line-height: 1.3; }
+  .footer__col ul { display: grid; gap: var(--space-1); }
+  .footer__col li { min-height: 1.75rem; white-space: nowrap; }
+  .footer__col a:hover { color: var(--color-accent); }
+  .footer__col--pages ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-5); }
+  .footer__legal { color: var(--color-text-2); }
+  .footer__lang { display: flex; gap: var(--space-4); font-weight: 600; }
+  .footer__lang [aria-current] { color: var(--color-accent); }
+  .footer__bottom { margin-top: var(--space-7); padding-top: var(--space-4); border-top: 1px solid var(--color-surface); color: var(--color-text-2); }
+
+  @media (min-width: 48rem) {
+    .footer__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 75rem) {
+    .footer__grid { grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr); }
+  }
+  /* Room for the phone action bar */
+  @media (max-width: 47.99rem) {
+    .footer { padding-bottom: calc(var(--bar-h) + var(--space-6)); }
+  }
+</style>

@@ -1,0 +1,100 @@
+---
+// #pidbir — first screen: H1, the request card, one line of facts, and the ДУМА acrostic that points into the catalog.
+import VinForm from "./VinForm.astro";
+import { catalog } from "../data/site";
+---
+<section id="pidbir" data-rec="R-002,R-012,R-104" class="hero" aria-labelledby="pidbir-title">
+  <div class="container hero__grid">
+    <div class="hero__main">
+      <h1 id="pidbir-title" class="hero__title">Автозапчастини в Києві з 1999 року — над деталлю думаємо ми</h1>
+      <p class="hero__lead">Надішліть VIN-код або номер деталі: менеджер підбере запчастину для легкового чи вантажного авто.</p>
+      <div class="hero__card">
+        <VinForm id="vin" variant="hero" />
+      </div>
+      <p class="hero__facts">З 1999 року. Самовивіз — Голосіївський пр-т, 130/57, пн–пт 9:00–19:00. Відправка «Новою поштою» і «Делівері» по Україні.</p>
+    </div>
+
+    <nav class="hero__acrostic" aria-label="Каталог за літерами ДУМА">
+      <ul>
+        {catalog.map((row, i) => (
+          <li style={`--i:${i}`}>
+            <a href={`#${row.id}`}>
+              <span class="hero__letter" aria-hidden="true">{row.letter}</span>
+              <span class="hero__word">{row.word}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="hero__acrostic-caption">Каталог: деталі, устаткування, механізми, аксесуари</p>
+    </nav>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; padding-block: var(--space-6) var(--space-8); }
+  .hero__grid { display: grid; gap: var(--space-7); }
+  .hero__main { display: grid; gap: var(--space-4); align-content: start; min-width: 0; }
+  .hero__title { max-width: 16ch; font-synthesis: none; }
+  .hero__lead { font-size: var(--text-lead); line-height: 1.5; max-width: 40ch; color: var(--color-text); }
+  .hero__card { margin-top: var(--space-2); max-width: 40rem; }
+  .hero__facts { max-width: 52ch; font-size: var(--text-small); color: var(--color-text-2); }
+
+  /* Acrostic: a row of four letters on phones and tablets, a column on wide screens */
+  .hero__acrostic ul { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+  .hero__acrostic a {
+    display: grid; place-items: center;
+    min-height: 4.5rem;
+    color: var(--color-brand);
+    text-decoration: none;
+    border-radius: var(--radius);
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+  .hero__acrostic a:hover { background: var(--color-surface); }
+  .hero__acrostic a:active { background: var(--color-border); }
+  .hero__letter {
+    display: block;
+    font-family: var(--font-display); font-style: italic; font-weight: 900;
+    font-size: var(--text-letter-hero); line-height: 0.85;
+    padding-inline: 0.06em 0.12em;
+  }
+  .hero__word {
+    position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .hero__acrostic-caption { margin-top: var(--space-3); font-size: var(--text-small); color: var(--color-graphite); }
+
+  /* Letters fold in, one after another, along the italic slant (effect 1) */
+  .hero__letter { animation: letter-in 450ms var(--ease-out) both; animation-delay: calc(var(--i) * 80ms + 120ms); }
+  @keyframes letter-in {
+    from { clip-path: polygon(-30% 0, 0 0, -25% 100%, -30% 100%); opacity: .2; }
+    to { clip-path: polygon(-30% 0, 125% 0, 100% 100%, -30% 100%); opacity: 1; }
+  }
+
+  @media (min-width: 48rem) {
+    .hero { padding-block: var(--space-7) var(--space-9); }
+    .hero__acrostic ul { max-width: 40rem; }
+  }
+
+  @media (min-width: 75rem) {
+    .hero { padding-block: var(--space-7) var(--space-9); }
+    .hero__grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--grid-gap); align-items: start; }
+    .hero__main { grid-column: 1 / span 8; }
+    .hero__acrostic { grid-column: 10 / span 3; }
+    .hero__acrostic ul { grid-template-columns: 1fr; gap: var(--space-1); max-width: none; }
+    .hero__acrostic a {
+      display: flex; align-items: flex-end; justify-content: flex-start; gap: var(--space-3);
+      min-height: 0; padding: var(--space-1) var(--space-2);
+    }
+    .hero__letter { width: 1.1em; flex: none; animation-delay: calc(var(--i) * 110ms + 120ms); }
+    .hero__word {
+      position: static !important; width: auto; height: auto; overflow: visible; clip: auto;
+      padding-bottom: var(--space-2);
+      font-size: var(--text-small); font-weight: 500; color: var(--color-graphite);
+    }
+    .hero__acrostic a:hover .hero__word { color: var(--color-text); text-decoration: underline; }
+    .hero__acrostic-caption { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__letter { animation: none; }
+  }
+</style>

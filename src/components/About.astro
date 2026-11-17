@@ -1,0 +1,70 @@
+---
+// #pro-nas — facts instead of slogans: the line of years (C-009), legal entity (C-011), Google Maps reviews (R-008, R-009).
+import { history, legal, mapsProfile } from "../data/site";
+---
+<section id="pro-nas" class="about" data-rec="R-008" aria-labelledby="pro-nas-title">
+  <div class="container">
+    <h2 id="pro-nas-title" class="about__title">З 1999 року — від складу до власної логістики</h2>
+
+    <div class="about__timeline">
+      <span class="about__line" aria-hidden="true" data-reveal="line"></span>
+      <ol class="about__years">
+        {history.map((h) => (
+          <li>
+            <span class="about__year num">{h.year}</span>
+            <span class="about__text">{h.text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="about__foot">
+      <p class="about__legal num">{legal}</p>
+      <a class="about__reviews" href={mapsProfile} target="_blank" rel="noopener" data-rec="R-009">Відгуки про нас у Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about { padding-block: var(--section-y-wide) var(--section-y); }
+  .about__title { max-width: 20ch; }
+  .about__timeline { position: relative; margin-top: var(--space-8); }
+  .about__line {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--color-brand);
+    transform-origin: center top;
+  }
+  :global(.js) .about__line:not(.is-visible) { transform: scaleY(0); }
+  .about__line { transition: transform 600ms var(--ease-out); }
+  .about__years { display: grid; gap: var(--space-6); padding-left: var(--space-6); }
+  .about__years li { display: grid; gap: var(--space-1); }
+  .about__year {
+    font-family: var(--font-display); font-style: italic; font-weight: 800; font-synthesis: none;
+    font-size: var(--text-year); line-height: 1;
+  }
+  .about__text { color: var(--color-text-2); max-width: 28ch; }
+  .about__foot {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline;
+    gap: var(--space-4) var(--space-7);
+    margin-top: var(--space-8); padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .about__legal { color: var(--color-text-2); }
+  .about__reviews { color: var(--color-accent); font-weight: 600; font-size: var(--text-lead); }
+
+  /* Wide: the years stand in one row, the red line runs from 1999 to 2012 (effect 5) */
+  @media (min-width: 75rem) {
+    .about__timeline { padding-top: var(--space-6); }
+    .about__line { left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 4px; transform-origin: left center; transition-duration: 900ms; }
+    :global(.js) .about__line:not(.is-visible) { transform: scaleX(0); }
+    .about__years {
+      grid-template-columns: repeat(5, max-content);
+      justify-content: space-between;
+      padding-left: 0;
+    }
+    .about__years li { position: relative; padding-top: var(--space-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .about__line:not(.is-visible) { transform: none; }
+  }
+</style>

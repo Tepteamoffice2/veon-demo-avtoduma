@@ -1,0 +1,110 @@
+---
+// #katalog — the ДУМА staircase: four letters of the logo caption, each a group of real catalog sections (R-005).
+import FutureLink from "./FutureLink.astro";
+import { catalog, viber } from "../data/site";
+---
+<section id="katalog" class="catalog" data-rec="R-005" aria-labelledby="katalog-title">
+  <div class="container">
+    <h2 id="katalog-title" class="catalog__title">
+      <span class="catalog__initial">Д</span>еталі, <span class="catalog__initial">у</span>статкування, <span class="catalog__initial">м</span>еханізми, <span class="catalog__initial">а</span>ксесуари
+    </h2>
+
+    <ol class="catalog__rows">
+      {catalog.map((row, i) => (
+        <li id={row.id} class="catalog__row" style={`--step:${i}`}>
+          <span class="catalog__letter" aria-hidden="true">{row.letter}</span>
+          <div class="catalog__body">
+            <h3 class="catalog__word">{row.word}</h3>
+            <ul class="catalog__items">
+              {row.items.map((item) => <li><FutureLink class="catalog__link">{item}</FutureLink></li>)}
+            </ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="catalog__foot">
+      <FutureLink class="catalog__brands">Бренди</FutureLink>
+      <p>Не знайшли свою групу? <a href={viber.href}>Надішліть VIN у Viber</a></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .catalog { padding-block: var(--section-y-wide); }
+  .catalog__title { max-width: 18ch; }
+  .catalog__initial { color: var(--color-brand); }
+  .catalog__rows { display: grid; gap: var(--space-6); margin-top: var(--space-8); }
+  .catalog__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-4);
+    padding-left: calc(var(--step) * var(--space-4));
+  }
+  .catalog__letter {
+    display: block;
+    font-family: var(--font-display); font-style: italic; font-weight: 900; font-synthesis: none;
+    font-size: var(--text-letter-xl); line-height: 0.74;
+    color: var(--color-brand);
+    padding-inline: 0.04em 0.1em;
+    transition: transform 200ms var(--ease-out);
+  }
+  .catalog__body { display: grid; gap: var(--space-2); min-width: 0; padding-bottom: var(--space-1); }
+  .catalog__word {
+    font-family: var(--font-display); font-style: italic; font-weight: 800; font-synthesis: none;
+    font-size: var(--text-word); line-height: 1;
+  }
+  .catalog__items { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5); }
+  .catalog__items :global(.catalog__link) {
+    font-size: var(--text-body);
+    color: var(--color-text);
+    text-decoration: none;
+    padding-block: var(--space-1);
+  }
+  /* Effect 4: the line under a section draws in, the row's letter steps right */
+  .catalog__items :global(.catalog__link)::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: var(--color-border);
+    transform-origin: left center;
+    transition: transform 200ms var(--ease-out);
+  }
+  .catalog__items :global(.catalog__link):hover::after,
+  .catalog__items :global(.catalog__link):focus-visible::after { transform: scaleX(1.0); background: var(--color-accent); }
+  .catalog__items :global(.catalog__link):hover { color: var(--color-accent); }
+  .catalog__row:has(:global(.catalog__link:hover)) .catalog__letter,
+  .catalog__row:has(:global(.catalog__link:focus-visible)) .catalog__letter { transform: translateX(8px); }
+
+  .catalog__foot { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3) var(--space-6); margin-top: var(--space-8); font-size: var(--text-lead); }
+  .catalog__foot a { color: var(--color-accent); font-weight: 600; }
+  .catalog__foot :global(.catalog__brands) { font-family: var(--font-display); font-weight: 700; font-size: var(--text-h3); }
+
+  @media (min-width: 48rem) {
+    .catalog__items :global(.catalog__link)::after { transform: scaleX(0.25); }
+  }
+  @media (min-width: 64rem) {
+    .catalog__rows { gap: var(--space-5); }
+    .catalog__row {
+      align-items: end;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--grid-gap);
+      padding-left: 0;
+    }
+    .catalog__letter { grid-column: 1 / span 2; justify-self: start; }
+    .catalog__body { grid-column: 3 / -1; padding-bottom: var(--space-3); }
+    .catalog__row:nth-child(2) .catalog__letter { grid-column: 2 / span 2; }
+    .catalog__row:nth-child(2) .catalog__body { grid-column: 4 / -1; }
+    .catalog__row:nth-child(3) .catalog__letter { grid-column: 3 / span 2; }
+    .catalog__row:nth-child(3) .catalog__body { grid-column: 5 / -1; }
+    .catalog__row:nth-child(4) .catalog__letter { grid-column: 4 / span 2; }
+    .catalog__row:nth-child(4) .catalog__body { grid-column: 6 / -1; }
+    .catalog__items :global(.catalog__link) { font-size: var(--text-lead); }
+  }
+  @media (hover: none) {
+    .catalog__letter { transition: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .catalog__row:has(:global(.catalog__link:hover)) .catalog__letter,
+    .catalog__row:has(:global(.catalog__link:focus-visible)) .catalog__letter { transform: none; }
+  }
+</style>

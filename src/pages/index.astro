@@ -1,0 +1,57 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Finder from "../components/Finder.astro";
+import Catalog from "../components/Catalog.astro";
+import Delivery from "../components/Delivery.astro";
+import Business from "../components/Business.astro";
+import About from "../components/About.astro";
+import Contacts from "../components/Contacts.astro";
+import Footer from "../components/Footer.astro";
+import MobileBar from "../components/MobileBar.astro";
+import { phones, email, mapsProfile, telegram } from "../data/site";
+
+const title = "Автозапчастини в Києві з 1999 року, підбір за VIN | Автодума";
+const description = "Запчастини для легкових і вантажних авто, шини, оливи. Підбір за VIN у Viber чи Telegram, самовивіз у Києві, доставка «Новою поштою» по Україні.";
+
+// Facts from veon/client.json only; no rating, no invented data
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AutoPartsStore",
+  name: "Автодума",
+  legalName: "ТОВ «Отомобіль»",
+  foundingDate: "1999",
+  telephone: phones.map((p) => p.href.replace("tel:", "")),
+  email,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "пр-т Голосіївський, 130/57",
+    addressLocality: "Київ",
+    postalCode: "03127",
+    addressCountry: "UA",
+  },
+  openingHours: "Mo-Fr 09:00-19:00",
+  paymentAccepted: "Cash, Bank transfer, Google Pay, Apple Pay, Visa, Mastercard",
+  hasMap: mapsProfile,
+  sameAs: [telegram.href, mapsProfile],
+};
+---
+<Base lang="uk" title={title} description={description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <Header slot="header" />
+  <Hero />
+  <Finder />
+  <Catalog />
+  <Delivery />
+  <Business />
+  <About />
+  <Contacts />
+  <Footer slot="footer" />
+  <MobileBar slot="footer" />
+</Base>
+
+<style is:global>
+  /* Every heading face is a real file: no synthetic bold or italic */
+  h1, h2, h3 { font-synthesis: none; text-wrap: balance; }
+</style>

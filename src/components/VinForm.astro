@@ -1,0 +1,186 @@
+---
+// The request card: VIN or part number → copied for the chat, Viber/Telegram opens. No fake sending (demo.md §6).
+// variant "hero" — full card in #pidbir; "mini" — compact field in the sticky header.
+import Icon from "./Icon.astro";
+import { viber, telegram, phones, mainPhoneShort } from "../data/site";
+interface Props { id: string; variant?: "hero" | "mini"; }
+const { id, variant = "hero" } = Astro.props;
+const hero = variant === "hero";
+---
+<div class:list={["vin", `vin--${variant}`]} data-vin-group>
+  <label for={id} class:list={["vin__label", { "visually-hidden": !hero }]}>
+    VIN-код або номер деталі
+    {hero && <span id={`${id}-hint`} class="vin__hint">VIN — 17 символів, є у свідоцтві про реєстрацію (техпаспорті)</span>}
+  </label>
+  <div class="vin__row">
+    <div class="vin__field">
+      <input
+        id={id}
+        class="vin__input num"
+        type="text"
+        name="vin"
+        inputmode="text"
+        autocomplete="off"
+        autocapitalize="characters"
+        spellcheck="false"
+        maxlength="40"
+        placeholder={hero ? undefined : "VIN або номер деталі"}
+        aria-describedby={hero ? `${id}-error` : undefined}
+        data-vin-input
+      />
+      <span class="vin__count num" aria-hidden="true" data-vin-count>0 / 17</span>
+    </div>
+    {!hero && (
+      <a class="btn btn--primary vin__mini-send" href={viber.href} data-vin-send>
+        <Icon name="viber" />
+        <span>Viber</span>
+      </a>
+    )}
+  </div>
+  {hero && (
+    <>
+      <p id={`${id}-error`} class="vin__error" data-vin-error></p>
+      <div class="vin__actions">
+        <a class="btn btn--primary vin__viber" href={viber.href} data-vin-send>
+          <Icon name="viber" />
+          <span>Надіслати у Viber</span>
+        </a>
+        <a class="btn btn--outline vin__tg" href={telegram.href} target="_blank" rel="noopener" data-vin-send>
+          <Icon name="telegram" />
+          <span>Telegram</span>
+        </a>
+        <a class="btn btn--outline vin__call num" href={phones[0].href}>
+          <Icon name="phone" />
+          <span class="vin__call-long">{mainPhoneShort}</span>
+          <span class="vin__call-short">Подзвонити</span>
+        </a>
+      </div>
+      <p class="vin__note" data-vin-note></p>
+    </>
+  )}
+  <p class="visually-hidden" role="status" data-vin-status></p>
+</div>
+
+<style>
+  .vin { display: grid; gap: var(--space-2); }
+  .vin__label { display: grid; gap: var(--space-1); font-weight: 600; font-size: var(--text-body); }
+  .vin__row { display: flex; gap: var(--space-2); }
+  .vin__field { position: relative; flex: 1 1 auto; min-width: 0; }
+  .vin__input {
+    width: 100%;
+    height: var(--field-h);
+    padding: 0 calc(var(--space-9) - var(--space-2)) 0 var(--space-4);
+    border: var(--border-w) solid var(--color-text);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-lead);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .vin__input::placeholder { color: var(--color-text-2); text-transform: none; letter-spacing: 0; font-weight: 400; }
+  .vin__input:hover { background: var(--color-surface); }
+  .vin__input:focus-visible { outline-offset: var(--border-w); }
+  .vin__input[aria-invalid="true"] { border-color: var(--color-accent); }
+  .vin__count {
+    position: absolute; right: var(--space-4); top: 50%;
+    transform: translateY(-50%);
+    font-size: var(--text-small); font-weight: 600; color: var(--color-text-2);
+    pointer-events: none;
+  }
+  .vin__count.is-vin { color: var(--color-accent); animation: vin-pop var(--dur-fast) var(--ease-out); }
+  @keyframes vin-pop { from { opacity: 0; transform: translateY(-50%) scale(.96); } to { opacity: 1; transform: translateY(-50%) scale(1); } }
+  .vin__hint { font-size: var(--text-small); font-weight: 400; color: var(--color-text-2); }
+  .vin__error { font-size: var(--text-small); font-weight: 600; color: var(--color-accent); min-height: 0; }
+  .vin__error:empty { display: none; }
+  .vin__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3); }
+  .vin__note { min-height: 1.6em; font-size: var(--text-small); color: var(--color-text-2); overflow-wrap: anywhere; }
+  .vin__note.is-done { color: var(--color-text); font-weight: 600; }
+  .vin__call-short { display: none; }
+
+  /* Phone: Viber full width, Telegram and call in one row */
+  @media (max-width: 47.99rem) {
+    .vin--hero { --field-h: 3.5rem; }
+    .vin--hero .btn { --control-h: 3.5rem; }
+    .vin__actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-2); }
+    .vin__viber { grid-column: 1 / -1; }
+    .vin__actions .btn { padding: 0 var(--space-3); }
+    .vin__call-long { display: none; }
+    .vin__call-short { display: inline; }
+  }
+
+  /* Compact header field */
+  .vin--mini { --field-h: 2.75rem; --control-h: 2.75rem; }
+  .vin--mini .vin__input { font-size: var(--text-body); padding-right: var(--space-8); }
+  .vin--mini .vin__mini-send { padding: 0 var(--space-4); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vin__count.is-vin { animation: none; }
+  }
+</style>
+
+<script>
+  const VIN = /^[A-HJ-NPR-Z0-9]{17}$/;
+  const clean = (v: string) => v.replace(/\s+/g, "").toUpperCase();
+
+  for (const group of document.querySelectorAll<HTMLElement>("[data-vin-group]")) {
+    const input = group.querySelector<HTMLInputElement>("[data-vin-input]");
+    const count = group.querySelector<HTMLElement>("[data-vin-count]");
+    const error = group.querySelector<HTMLElement>("[data-vin-error]");
+    const note = group.querySelector<HTMLElement>("[data-vin-note]");
+    const status = group.querySelector<HTMLElement>("[data-vin-status]");
+    if (!input || !count) continue;
+
+    const kind = (v: string) => (VIN.test(v) ? "VIN" : "Номер деталі");
+    const message = (v: string) => `${kind(v)}: ${v}`;
+
+    const check = (v: string): string => {
+      if (!/^[A-Z0-9]+$/.test(v)) return "";
+      if (v.length === 17 && !VIN.test(v)) return "У VIN-коді немає літер I, O і Q — перевірте, будь ласка";
+      if (v.length === 16 || v.length === 18) return "У VIN-коді 17 символів — перевірте, будь ласка";
+      return "";
+    };
+    const showError = (v: string) => {
+      if (!error) return;
+      const text = check(v);
+      error.textContent = text;
+      if (text) input.setAttribute("aria-invalid", "true");
+      else input.removeAttribute("aria-invalid");
+    };
+
+    const update = () => {
+      const v = clean(input.value);
+      const isVin = VIN.test(v);
+      count.textContent = isVin ? "VIN" : `${Math.min(v.length, 99)} / 17`;
+      count.classList.toggle("is-vin", isVin);
+      if (note) {
+        note.classList.remove("is-done");
+        note.textContent = v ? `У чат піде: ${message(v)}` : "";
+      }
+      if (error?.textContent && !check(v)) showError(v);
+    };
+
+    input.addEventListener("input", update);
+    input.addEventListener("blur", () => showError(clean(input.value)));
+
+    for (const link of group.querySelectorAll<HTMLAnchorElement>("[data-vin-send]")) {
+      link.addEventListener("click", () => {
+        const v = clean(input.value);
+        if (!v) return; // empty field: the chat opens anyway, the visitor writes in it
+        showError(v);
+        const text = message(v);
+        const done = () => {
+          const say = `Скопійовано: ${text}. Вставте в чат`;
+          if (note) { note.textContent = say; note.classList.add("is-done"); }
+          if (status) status.textContent = say;
+        };
+        navigator.clipboard?.writeText(text).then(done, () => {
+          if (note) note.textContent = `Напишіть у чат: ${text}`;
+        });
+      });
+    }
+    update();
+  }
+</script>

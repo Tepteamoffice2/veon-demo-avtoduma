@@ -1,0 +1,52 @@
+---
+// Only the subsets the page uses: Ukrainian (cyrillic) and Latin (VIN, digits, brand names)
+import "@fontsource/pliant/cyrillic-700.css";
+import "@fontsource/pliant/latin-700.css";
+import "@fontsource/pliant/cyrillic-800-italic.css";
+import "@fontsource/pliant/latin-800-italic.css";
+import "@fontsource/pliant/cyrillic-900-italic.css";
+import "@fontsource/pliant/latin-900-italic.css";
+import "@fontsource/libre-franklin/cyrillic-400.css";
+import "@fontsource/libre-franklin/latin-400.css";
+import "@fontsource/libre-franklin/cyrillic-500.css";
+import "@fontsource/libre-franklin/latin-500.css";
+import "@fontsource/libre-franklin/cyrillic-600.css";
+import "@fontsource/libre-franklin/latin-600.css";
+import displayFont from "@fontsource/pliant/files/pliant-cyrillic-800-italic.woff2?url";
+import "../styles/tokens.css";
+import "../styles/global.css";
+
+interface Props { lang: string; title: string; description: string; canonical?: string; }
+const { lang, title, description, canonical } = Astro.props;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add("js")</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="uk_UA" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <link rel="icon" href="/images/logo-avtoduma.svg" type="image/svg+xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main">{lang.startsWith("uk") ? "До змісту" : lang.startsWith("ru") ? "К содержанию" : "Skip to content"}</a>
+    <slot name="header" />
+    <main id="main"><slot /></main>
+    <slot name="footer" />
+    <script src="../scripts/reveal.ts"></script>
+  </body>
+</html>
+
+<style is:global>
+  /* Repeated from global.css so the layout stands on its own (Hallmark Floor 4) */
+  html, body { overflow-x: clip; font-synthesis: none; }
+</style>
